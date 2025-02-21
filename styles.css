@@ -13,6 +13,7 @@ body {
     color: white;
     flex-direction: column;
     text-align: center;
+    font-family: 'Inter Tight';
 }
 
 h1 {
@@ -40,7 +41,7 @@ button:hover {
 canvas {
     border: 5px solid #3498db;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    background-color: #34495e;
+    background-color: #7841f8;
 }
 
 .instructions {
