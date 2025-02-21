@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Игра: Угадай число</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабиринт</title>
+
 </head>
 <body>
-  <div class="game-container">
-    <h1>Угадай число от 0 до 10!</h1>
-    <p>Введи число и нажми "Проверить"</p>
-    <div class="game-inputs">
-        <input type="number" id="guess" placeholder="Ваше число" min="0" max="10">
-        <button id="checkButton">Проверить</button>
-    </div>
-    <p id="result"></p>
-    <p id="attempts">Попытки: 0</p>
-  </div>
+    <h1>Лабиринт: Найди выход!</h1>
+    <canvas id="gameCanvas"></canvas>
+    <p class="instructions">Используй стрелки на клавиатуре, чтобы двигаться. Найди выход!</p>
+    <div id="gameOver" class="game-over">Поздравляем, вы нашли выход!</div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
