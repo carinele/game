@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Лабиринт</title>
-
+    <!-- Подключение шрифта Inter Tight -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> <!-- Подключение внешнего CSS файла -->
 </head>
 <body>
     <h1>Лабиринт: Найди выход!</h1>
-    <canvas id="gameCanvas"></canvas>
+    <button id="startButton" class="start-button">Старт</button>
+    <canvas id="gameCanvas" style="display:none;"></canvas> <!-- Игра скрыта до старта -->
     <p class="instructions">Используй стрелки на клавиатуре, чтобы двигаться. Найди выход!</p>
-    <div id="gameOver" class="game-over">Поздравляем, вы нашли выход!</div>
+    <div id="gameOver" class="game-over" style="display:none;">Поздравляю, вы нашли выход!</div>
+    <button id="restartButton" class="restart-button" style="display:none;">Рестарт</button>
 
-    <script src="script.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>
