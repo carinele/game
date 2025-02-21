@@ -1,119 +1,65 @@
-// game.js
+const board = document.getElementById('board');
+const resetBtn = document.getElementById('resetBtn');
+const message = document.getElementById('message');
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+let currentPlayer = 'X';
+let gameBoard = ['', '', '', '', '', '', '', '', ''];
+let gameOver = false;
 
-const startButton = document.getElementById("startButton");
-const gameOverMessage = document.getElementById("gameOver");
-const restartButton = document.getElementById("restartButton");
+function checkWinner() {
+  const winPatterns = [
+    [0, 1, 2], // 1st row
+    [3, 4, 5], // 2nd row
+    [6, 7, 8], // 3rd row
+    [0, 3, 6], // 1st column
+    [1, 4, 7], // 2nd column
+    [2, 5, 8], // 3rd column
+    [0, 4, 8], // diagonal
+    [2, 4, 6]  // diagonal
+  ];
 
-let player = { x: 50, y: 50, size: 20, color: "green" };
-let exit = { x: 380, y: 380, size: 20, color: "red" };
-let maze = [];
-let gameStarted = false;
-
-const mazeWidth = 10;
-const mazeHeight = 10;
-const blockSize = 40;
-
-// Функция для генерации лабиринта
-function generateMaze() {
-    maze = [];
-    for (let y = 0; y < mazeHeight; y++) {
-        maze[y] = [];
-        for (let x = 0; x < mazeWidth; x++) {
-            maze[y][x] = Math.random() < 0.3 ? 1 : 0; // 0 - пустое место, 1 - стена
-        }
+  for (let pattern of winPatterns) {
+    const [a, b, c] = pattern;
+    if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+      gameOver = true;
+      message.textContent = `Игрок ${gameBoard[a]} выиграл!`;
+      return;
     }
-    maze[0][0] = 0; // Начало
-    maze[mazeHeight - 1][mazeWidth - 1] = 0; // Выход
+  }
+
+  if (!gameBoard.includes('')) {
+    gameOver = true;
+    message.textContent = 'Ничья!';
+  }
 }
 
-// Функция для рисования лабиринта
-function drawMaze() {
-    for (let y = 0; y < mazeHeight; y++) {
-        for (let x = 0; x < mazeWidth; x++) {
-            if (maze[y][x] === 1) {
-                ctx.fillStyle = "#2ecc71"; // Стены в виде кустов
-            } else {
-                ctx.fillStyle = "#ecf0f1"; // Пустые пространства
-            }
-            ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
-        }
-    }
+function renderBoard() {
+  board.innerHTML = '';
+  gameBoard.forEach((cell, index) => {
+    const cellDiv = document.createElement('div');
+    cellDiv.textContent = cell;
+    cellDiv.addEventListener('click', () => handleCellClick(index));
+    board.appendChild(cellDiv);
+  });
 }
 
-// Функция для рисования игрока
-function drawPlayer() {
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.size, player.size);
+function handleCellClick(index) {
+  if (gameBoard[index] || gameOver) return;
+
+  gameBoard[index] = currentPlayer;
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X'; // смена игрока
+  renderBoard();
+  checkWinner();
 }
 
-// Функция для рисования выхода
-function drawExit() {
-    ctx.fillStyle = exit.color;
-    ctx.fillRect(exit.x, exit.y, exit.size, exit.size);
+function resetGame() {
+  gameBoard = ['', '', '', '', '', '', '', '', ''];
+  currentPlayer = 'X';
+  gameOver = false;
+  message.textContent = '';
+  renderBoard();
 }
 
-// Функция для проверки нахождения выхода
-function checkExit() {
-    if (player.x === exit.x && player.y === exit.y) {
-        gameOverMessage.style.display = "block";
-        restartButton.style.display = "block";
-        gameStarted = false;
-    }
-}
+resetBtn.addEventListener('click', resetGame);
 
-// Функция для обработки движения игрока
-function movePlayer(e) {
-    if (!gameStarted) return;
-
-    if (e.key === "ArrowUp" && player.y > 0 && maze[Math.floor((player.y - blockSize) / blockSize)][Math.floor(player.x / blockSize)] === 0) {
-        player.y -= blockSize;
-    }
-    if (e.key === "ArrowDown" && player.y < canvas.height - player.size && maze[Math.floor((player.y + blockSize) / blockSize)][Math.floor(player.x / blockSize)] === 0) {
-        player.y += blockSize;
-    }
-    if (e.key === "ArrowLeft" && player.x > 0 && maze[Math.floor(player.y / blockSize)][Math.floor((player.x - blockSize) / blockSize)] === 0) {
-        player.x -= blockSize;
-    }
-    if (e.key === "ArrowRight" && player.x < canvas.width - player.size && maze[Math.floor(player.y / blockSize)][Math.floor((player.x + blockSize) / blockSize)] === 0) {
-        player.x += blockSize;
-    }
-    checkExit();
-    draw();
-}
-
-// Функция для рисования всех элементов
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawMaze();
-    drawPlayer();
-    drawExit();
-}
-
-// Функция для старта игры
-function startGame() {
-    gameStarted = true;
-    startButton.style.display = "none";
-    canvas.style.display = "block";
-    gameOverMessage.style.display = "none";
-    restartButton.style.display = "none";
-    player = { x: 50, y: 50, size: 20, color: "green" };
-    generateMaze();
-    draw();
-}
-
-// Функция для рестарта игры
-function restartGame() {
-    gameOverMessage.style.display = "none";
-    restartButton.style.display = "none";
-    player = { x: 50, y: 50, size: 20, color: "green" };
-    generateMaze();
-    draw();
-}
-
-// Обработчики событий
-startButton.addEventListener("click", startGame);
-restartButton.addEventListener("click", restartGame);
-document.addEventListener("keydown", movePlayer);
+renderBoard();
